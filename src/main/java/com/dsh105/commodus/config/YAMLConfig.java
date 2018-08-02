@@ -46,7 +46,7 @@ public class YAMLConfig {
         try {
             this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(configStream, "UTF-8"));
         } catch (NoSuchMethodError | UnsupportedEncodingException e) {
-            this.config = YamlConfiguration.loadConfiguration(configStream);
+			this.config = YamlConfiguration.loadConfiguration(file);
         }
         this.plugin = plugin;
     }
@@ -148,7 +148,7 @@ public class YAMLConfig {
 		try{
 			this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(configStream, "UTF-8"));
 		}catch(NoSuchMethodError | UnsupportedEncodingException e){
-			this.config = YamlConfiguration.loadConfiguration(configStream);
+			this.config = YamlConfiguration.loadConfiguration(file);
 		}
     }
 

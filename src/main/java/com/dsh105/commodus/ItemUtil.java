@@ -17,17 +17,17 @@
 
 package com.dsh105.commodus;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Utilities for item manipulation
@@ -66,12 +66,12 @@ public class ItemUtil {
 
     public static ItemStack getItem(ConfigurationSection section) {
         String itemName = ChatColor.translateAlternateColorCodes('&', section.getString("name", null));
-        int itemID = section.getInt("id", -1);
+		String materialType = section.getString("material", null);
         int itemAmount = section.getInt("amount", 1);
         Byte itemData = (byte) section.getInt("data", -1);
 
-        if (itemID == -1) {
-            throw new IllegalArgumentException("Item has no specified ID!");
+		if(materialType == null){
+			throw new IllegalArgumentException("Item has no specified material!");
         }
 
         if (itemAmount == -1) {
@@ -98,9 +98,9 @@ public class ItemUtil {
 
         ItemStack item;
         if (itemData > 0) {
-            item = new ItemStack(Material.getMaterial(itemID), itemAmount, itemData);
+			item = new ItemStack(Material.getMaterial(materialType), itemAmount, itemData);
         } else {
-            item = new ItemStack(Material.getMaterial(itemID), itemAmount);
+			item = new ItemStack(Material.getMaterial(materialType), itemAmount);
         }
 
         if (item.getType() == null) {

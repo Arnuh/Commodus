@@ -29,19 +29,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-	<distributionManagement>
-	    <repository>
-	        <id>releases</id>
-	        <name>releases</name>
-	        <url>http://repo.codingforcookies.com/artifactory/releases</url>
-	    </repository>
-	    <snapshotRepository>
-	        <id>snapshots</id>
-	        <name>snapshots</name>
-	        <url>http://repo.codingforcookies.com/artifactory/snapshots</url>
-	    </snapshotRepository>
-	</distributionManagement>
-
     <!-- Repositories -->
     <repositories>
         <!-- Spigot -->
@@ -55,14 +42,6 @@
             <id>hawk-repo</id>
             <url>http://ci.hawkfalcon.com/plugin/repository/everything/</url>
         </repository>
-    	<repository>
-    		<id>codingforcookies-releases</id>
-    		<url>http://repo.codingforcookies.com/artifactory/releases</url>
-    	</repository>
-    	<repository>
-    		<id>codingforcookies-snapshots</id>
-    		<url>http://repo.codingforcookies.com/artifactory/snapshots</url>
-    	</repository>
     </repositories>
 
     <!-- Dependencies -->
@@ -71,7 +50,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
