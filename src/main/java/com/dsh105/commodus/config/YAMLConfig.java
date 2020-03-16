@@ -17,10 +17,9 @@
 
 package com.dsh105.commodus.config;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 
@@ -28,14 +27,25 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.yaml.snakeyaml.DumperOptions;
 
 public class YAMLConfig {
 
+	private static Field yamlOptionsField;
+	static{
+		try{//Spigot API doesn't expose this so fuck them.
+			yamlOptionsField = YamlConfiguration.class.getDeclaredField("yamlOptions");
+			yamlOptionsField.setAccessible(true);
+		}catch(NoSuchFieldException e){
+			e.printStackTrace();
+		}
+	}
+	
     private int comments;
     private YAMLConfigManager manager;
 
     private File file;
-    private FileConfiguration config;
+    private YamlConfiguration config;
     private JavaPlugin plugin;
 
     public YAMLConfig(InputStream configStream, File configFile, int comments, JavaPlugin plugin) {
@@ -44,8 +54,8 @@ public class YAMLConfig {
 
         this.file = configFile;
         try {
-            this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(configStream, "UTF-8"));
-        } catch (NoSuchMethodError | UnsupportedEncodingException e) {
+            this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(configStream, StandardCharsets.UTF_8));
+        } catch (NoSuchMethodError e) {
 			this.config = YamlConfiguration.loadConfiguration(file);
         }
         this.plugin = plugin;
@@ -142,12 +152,18 @@ public class YAMLConfig {
         this.comments = header.length + 2;
         this.reloadConfig();
     }
+    
+    public void setScalarStyle(DumperOptions.ScalarStyle style) throws IllegalAccessException, UnsupportedOperationException{
+    	if(yamlOptionsField == null)throw new UnsupportedOperationException();
+		 DumperOptions options = (DumperOptions) yamlOptionsField.get(config);
+		 options.setDefaultScalarStyle(style);
+    }
 
     public void reloadConfig() {
 		InputStream configStream = manager.getConfigContent(file);
-		try{
-			this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(configStream, "UTF-8"));
-		}catch(NoSuchMethodError | UnsupportedEncodingException e){
+		try(Reader reader = new InputStreamReader(configStream, StandardCharsets.UTF_8)){
+			this.config = YamlConfiguration.loadConfiguration(reader);
+		}catch(Exception ignore){
 			this.config = YamlConfiguration.loadConfiguration(file);
 		}
     }
@@ -161,5 +177,4 @@ public class YAMLConfig {
     public Set<String> getKeys(boolean deep) {
         return this.config.getKeys(deep);
     }
-
 }
